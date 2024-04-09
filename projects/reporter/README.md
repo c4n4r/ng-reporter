@@ -41,6 +41,28 @@ import {provideReporterInterceptor} from "./reporter.module";
 })
 ```
 
+After the module is imported and the interceptor is provided, the errors will be catched and sent to the application by the reporter service.
+
+```typescript
+import {ReporterService} from "./reporter.service";
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  constructor(private reporter: ReporterService) {
+    this.reporter.errors.subscribe((error) => {
+      if(error) {
+        // DO WHAT YOU WANT WITH THE ERROR
+      }
+    });
+  }
+}
+```
+
+
 ## Configuration
 
 The configuration object has two properties, whitelist and blacklist. Both properties have two properties, urls and codes. The urls property is an array of strings that will be used to match the url of the request. The codes property is an array of numbers that will be used to match the status code of the response.
