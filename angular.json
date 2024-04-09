@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "reporter": {
+    "ng-error-reporter": {
       "projectType": "library",
       "root": "projects/reporter",
       "sourceRoot": "projects/reporter/src",

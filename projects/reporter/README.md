@@ -1,24 +1,52 @@
-# Reporter
+# NG-Error-Reporter
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.3.0.
+A simple library to report errors from http requests to a server.
 
-## Code scaffolding
+## Minimum requirements
 
-Run `ng generate component component-name --project reporter` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project reporter`.
-> Note: Don't forget to add `--project reporter` or else it will be added to the default project in your `angular.json` file. 
+Angular 15.0.0
 
-## Build
+## Installation
 
-Run `ng build reporter` to build the project. The build artifacts will be stored in the `dist/` directory.
+```bash
+npm install ng-error-reporter
+```
 
-## Publishing
+## Usage
 
-After building your library with `ng build reporter`, go to the dist folder `cd dist/reporter` and run `npm publish`.
+Import the RouterModule in your module and call the forRoot method with the configuration object.
 
-## Running unit tests
+```typescript
+import {provideReporterInterceptor} from "./reporter.module";
 
-Run `ng test reporter` to execute the unit tests via [Karma](https://karma-runner.github.io).
+@NgModule({
+  imports: [
+    // import the module with the correct configuration
+    ReporterModule.forRoot({
+      whitelist: {
+        urls: [],
+        codes: [500, 418]
+      },
+      blacklist:
+        {
+          urls: [],
+          codes: []
+        }
+    })
+  ],
+  providers: [
+    // Will add the reporter interceptor to the http requests
+    provideReporterInterceptor()
+  ],
+})
+```
 
-## Further help
+## Configuration
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+The configuration object has two properties, whitelist and blacklist. Both properties have two properties, urls and codes. The urls property is an array of strings that will be used to match the url of the request. The codes property is an array of numbers that will be used to match the status code of the response.
+
+The whitelist property will only report the errors that match the urls and codes. The blacklist property will report all errors except the ones that match the urls and codes.
+
+## License
+
+MIT
