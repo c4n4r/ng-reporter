@@ -1,5 +1,4 @@
 # NgReporter
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/c4n4r/ng-reporter/Run%20Tests?label=tests)
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.3.
 
 ## Development server
