@@ -9,9 +9,10 @@ export const CONFIG_TOKEN = new InjectionToken<ReporterConfiguration>('config');
 export class ReporterService {
 
   // create a behavior subject to store to trigger errors
-  private errorSubject = new BehaviorSubject<ErrorResponse | null>(null);
+  private errorSubject = new BehaviorSubject<ErrorResponse[]>([]);
   private error$ = this.errorSubject.asObservable();
 
+  errors: ErrorResponse[] = [];
   configuration: ReporterConfiguration | null  = null;
 
   constructor(@Inject(CONFIG_TOKEN) configuration: ReporterConfiguration) {
@@ -21,14 +22,14 @@ export class ReporterService {
 
 // create a method to trigger errors
   triggerError(message: ErrorResponse){
-    this.errorSubject.next(message);
+    this.errors.push(message);
   }
   getError(){
     return this.error$;
   }
 
   getLatestError(){
-    return this.errorSubject.value;
+    return this.errors[this.errors.length - 1];
   }
 
   private checkConfiguration(){

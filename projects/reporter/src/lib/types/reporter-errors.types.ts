@@ -1,4 +1,5 @@
 export type ErrorResponse = {
+  triggeredAt: Date;
   code: number;
   message: string;
   others: any;

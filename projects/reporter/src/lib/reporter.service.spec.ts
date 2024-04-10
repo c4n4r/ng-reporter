@@ -3,7 +3,7 @@ import {provideReporterInterceptor, ReporterModule} from "./reporter-module/repo
 import {ReporterService} from "./reporter.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse} from "@angular/common/http";
-import {ReporterInterceptor} from "./interceptors/reporter-interceptor";
+import {ReporterInterceptor} from "./interceptors/reporter.interceptor";
 
 describe('Reporter management tests', () => {
   let reporterService: ReporterService;
@@ -80,9 +80,9 @@ describe('Reporter management tests', () => {
     spyOn(interceptor, 'intercept').and.callThrough();
     reporterService.getError().subscribe(error => {
       expect(error).toBeTruthy();
-      expect(error?.code).toBe(418);
-      expect(error?.request.url).toBe('http://example.com?test=bite');
-      expect(error?.request.payload).toBeNull();
+      expect(error[0]?.code).toBe(418);
+      expect(error[0]?.request.url).toBe('http://example.com?test=bite');
+      expect(error[0]?.request.payload).toBeNull();
     });
   }));
 
@@ -95,9 +95,9 @@ describe('Reporter management tests', () => {
     spyOn(interceptor, 'intercept').and.callThrough();
     reporterService.getError().subscribe(error => {
       expect(error).toBeTruthy();
-      expect(error?.code).toBe(500);
-      expect(error?.request.url).toBe('http://example.com');
-      expect(error?.request.payload).toEqual({
+      expect(error[0]?.code).toBe(500);
+      expect(error[0]?.request.url).toBe('http://example.com');
+      expect(error[0]?.request.payload).toEqual({
         test1: 'test one',
         test2: 'test two'
       });
@@ -111,6 +111,13 @@ describe('Reporter management tests', () => {
       expect(error).toBeNull();
     });
   }));
+
+  it('should get the latest error', fakeAsync(() => {
+    sendRequest(httpClient, httpMock, 'get', 'http://example.com', 500, {});
+    spyOn(interceptor, 'intercept').and.callThrough();
+    const latest = reporterService.getLatestError();
+    expect(latest).toBeTruthy();
+  }))
 });
 const sendRequest = (httpClient: HttpClient, httpMock: HttpTestingController, method: string, url: string, status: number, payload: any) => {
   // @ts-ignore

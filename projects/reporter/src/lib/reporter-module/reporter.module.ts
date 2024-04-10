@@ -3,7 +3,7 @@ import {CONFIG_TOKEN, ReporterService} from '../reporter.service';
 import { ReporterConfiguration } from '../types/reporter-configuration.types';
 import { reporterServiceFactory } from './factories/reporter-factory';
 import {HTTP_INTERCEPTORS} from "@angular/common/http";
-import {ReporterInterceptor} from "../interceptors/reporter-interceptor";
+import {ReporterInterceptor} from "../interceptors/reporter.interceptor";
 
 export const provideReporterInterceptor = () => {
   return {
