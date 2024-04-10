@@ -23,6 +23,7 @@ export class ReporterService {
 // create a method to trigger errors
   triggerError(message: ErrorResponse){
     this.errors.push(message);
+    this.errorSubject.next(this.errors);
   }
   getError(){
     return this.error$;

@@ -68,8 +68,6 @@ describe('Reporter management tests', () => {
     httpClient.get('http://example.com').subscribe(data => {
       expect(data).toEqual(mockedData);
     });
-
-    //expect the request
     const req = httpMock.expectOne('http://example.com');
     expect(req.request.method).toBe('GET');
     req.flush(mockedData);
@@ -79,6 +77,7 @@ describe('Reporter management tests', () => {
     sendRequest(httpClient, httpMock, 'get', 'http://example.com?test=bite', 418,  {});
     spyOn(interceptor, 'intercept').and.callThrough();
     reporterService.getError().subscribe(error => {
+      console.log(error)
       expect(error).toBeTruthy();
       expect(error[0]?.code).toBe(418);
       expect(error[0]?.request.url).toBe('http://example.com?test=bite');
@@ -108,7 +107,7 @@ describe('Reporter management tests', () => {
     sendRequest(httpClient, httpMock, 'get', 'http://example-blacklisted.com', 500, {});
     spyOn(interceptor, 'intercept').and.callThrough();
     reporterService.getError().subscribe(error => {
-      expect(error).toBeNull();
+      expect(error).toEqual([]);
     });
   }));
 
