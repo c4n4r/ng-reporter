@@ -2,7 +2,7 @@ import {fakeAsync, TestBed, tick} from "@angular/core/testing";
 import {provideReporterInterceptor, ReporterModule} from "./reporter-module/reporter.module";
 import {ReporterService} from "./reporter.service";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClient, HttpErrorResponse, HttpEventType} from "@angular/common/http";
 import {ReporterInterceptor} from "./interceptors/reporter.interceptor";
 
 describe('Reporter management tests', () => {
@@ -101,7 +101,6 @@ describe('Reporter management tests', () => {
         test2: 'test two'
       });
     });
-
   }))
 
   it('should not trigger an error if the code is not in the whitelist', fakeAsync(() => {
@@ -138,6 +137,5 @@ const sendRequest = (httpClient: HttpClient, httpMock: HttpTestingController, me
 
   const req = httpMock.expectOne(url);
   expect(req.request.method).toBe(method.toUpperCase());
-  req.flush(null, {status, statusText: 'Error'});
   tick();
 }

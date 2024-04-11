@@ -13,7 +13,7 @@ export class ErrorResponseAdapter implements BaseAdapter<ErrorResponseAdapterInp
       triggeredAt: new Date(),
       code: input.error.status,
       message: input.error.statusText,
-      others: null,
+      others: input.error.error,
       request: {
         url: input.request.url,
         method: input.request.method,
