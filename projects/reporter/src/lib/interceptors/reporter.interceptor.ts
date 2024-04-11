@@ -9,12 +9,20 @@ export class ReporterInterceptor {
 
   constructor(private reporterService: ReporterService) {}
 
-  intercept(request: HttpRequest<any>, next: HttpHandler) {
+  intercept(request: HttpRequest<never>, next: HttpHandler) {
     return next.handle(request).pipe(
   catchError((error: HttpErrorResponse) => {
-    if(!this.isUrlBlacklisted(request.url)) this.reporterService.triggerError(RequestManager.extractErrorResponseData(error, request));
+    if(this.shouldReportError(request, error)) this.reporterService.triggerError(RequestManager.extractErrorResponseData(error, request));
     throw error;
   }));
+  }
+
+  private shouldReportError(request: HttpRequest<never>, error: HttpErrorResponse): boolean {
+    return !this.isUrlBlacklisted(request.url)  &&  this.isCodeInWhitelist(error.status);
+  }
+
+  private isCodeInWhitelist(code: number): boolean {
+    return this.reporterService.configuration?.whitelist.codes.includes(code) ?? false;
   }
 
   private isUrlBlacklisted(url: string): boolean {

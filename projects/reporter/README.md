@@ -45,6 +45,7 @@ After the module is imported and the interceptor is provided, the errors will be
 
 ```typescript
 import {ReporterService} from "./reporter.service";
+import {ErrorResponse} from "./reporter-errors.types";
 
 @Component({
   selector: 'app-root',
@@ -53,10 +54,9 @@ import {ReporterService} from "./reporter.service";
 })
 export class AppComponent {
   constructor(private reporter: ReporterService) {
-    this.reporter.errors.subscribe((error) => {
-      if(error) {
-        // DO WHAT YOU WANT WITH THE ERROR
-      }
+    this.reporter.errors.subscribe((errors: ErrorResponse[]) => {
+      // You can get the latest error from the reporter service if needed
+      console.log(this.reporter.getLatestError()
     });
   }
 }
@@ -68,6 +68,29 @@ export class AppComponent {
 The configuration object has two properties, whitelist and blacklist. Both properties have two properties, urls and codes. The urls property is an array of strings that will be used to match the url of the request. The codes property is an array of numbers that will be used to match the status code of the response.
 
 The whitelist property will only report the errors that match the urls and codes. The blacklist property will report all errors except the ones that match the urls and codes.
+
+
+## Types
+
+### ErrorResponse
+
+```typescript
+export type ErrorResponse = {
+  triggeredAt: Date;
+  code: number;
+  message: string;
+  others: any;
+  request: ReporterErrorRequest;
+}
+
+export type ReporterErrorRequest = {
+  url: string;
+  method: string;
+  payload: any;
+  params: any;
+}
+```
+
 
 ## License
 

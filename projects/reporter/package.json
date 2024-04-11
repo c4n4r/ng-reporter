@@ -3,7 +3,7 @@
   "author": "Delphin Hadrien",
   "description": "Angular http error reporter",
   "license": "MIT",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "peerDependencies": {
     "@angular/common": ">=15.0.0",
     "@angular/core": ">=15.0.0"

@@ -103,6 +103,15 @@ describe('Reporter management tests', () => {
     });
 
   }))
+
+  it('should not trigger an error if the code is not in the whitelist', fakeAsync(() => {
+    sendRequest(httpClient, httpMock, 'get', 'http://example.com', 404, {});
+    spyOn(interceptor, 'intercept').and.callThrough();
+    reporterService.getError().subscribe(error => {
+      expect(error).toEqual([]);
+    });
+  }));
+
   it('should not trigger an error if the url is blacklisted', fakeAsync(() => {
     sendRequest(httpClient, httpMock, 'get', 'http://example-blacklisted.com', 500, {});
     spyOn(interceptor, 'intercept').and.callThrough();
