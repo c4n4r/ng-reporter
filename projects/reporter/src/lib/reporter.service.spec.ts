@@ -128,14 +128,14 @@ describe('Reporter management tests', () => {
 });
 const sendRequest = (httpClient: HttpClient, httpMock: HttpTestingController, method: string, url: string, status: number, payload: any) => {
   // @ts-ignore
-  httpClient[method.toLowerCase()](url, payload).subscribe(
-    () => {},
-    (error: HttpErrorResponse) => {
-      expect(error.status).toBe(status);
-    }
-  );
+  httpClient[method](url, payload).subscribe((data) => {
+    return fail('Request should have failed with status : ' + status);
+  }, (error: HttpErrorResponse) => {
+    expect(error.status).toBe(status);
+  });
 
   const req = httpMock.expectOne(url);
   expect(req.request.method).toBe(method.toUpperCase());
+  req.flush('Error', {status, statusText: 'Error'});
   tick();
 }
