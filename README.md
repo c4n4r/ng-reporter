@@ -1,26 +1,97 @@
-# NgReporter
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.1.3.
+# NG-Error-Reporter
 
-## Development server
+A simple library to report errors from http requests to a server.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Minimum requirements
 
-## Code scaffolding
+Angular 15.0.0
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Installation
 
-## Build
+```bash
+npm install ng-error-reporter
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Usage
 
-## Running unit tests
+Import the RouterModule in your module and call the forRoot method with the configuration object.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```typescript
+import {provideReporterInterceptor} from "./reporter.module";
 
-## Running end-to-end tests
+@NgModule({
+  imports: [
+    // import the module with the correct configuration
+    ReporterModule.forRoot({
+      whitelist: {
+        urls: [],
+        codes: [500, 418]
+      },
+      blacklist:
+        {
+          urls: [],
+          codes: []
+        }
+    })
+  ],
+  providers: [
+    // Will add the reporter interceptor to the http requests
+    provideReporterInterceptor()
+  ],
+})
+```
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+After the module is imported and the interceptor is provided, the errors will be catched and sent to the application by the reporter service.
 
-## Further help
+```typescript
+import {ReporterService} from "./reporter.service";
+import {ErrorResponse} from "./reporter-errors.types";
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  constructor(private reporter: ReporterService) {
+    this.reporter.errors.subscribe((errors: ErrorResponse[]) => {
+      // You can get the latest error from the reporter service if needed
+      console.log(this.reporter.getLatestError()
+    });
+  }
+}
+```
+
+
+## Configuration
+
+The configuration object has two properties, whitelist and blacklist. Both properties have two properties, urls and codes. The urls property is an array of strings that will be used to match the url of the request. The codes property is an array of numbers that will be used to match the status code of the response.
+
+The whitelist property will only report the errors that match the urls and codes. The blacklist property will report all errors except the ones that match the urls and codes.
+
+
+## Types
+
+### ErrorResponse
+
+```typescript
+export type ErrorResponse = {
+  triggeredAt: Date;
+  code: number;
+  message: string;
+  others: any;
+  request: ReporterErrorRequest;
+}
+
+export type ReporterErrorRequest = {
+  url: string;
+  method: string;
+  payload: any;
+  params: any;
+}
+```
+
+
+## License
+
+MIT
